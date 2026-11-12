@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Controle da Pri</title>
+  <meta name="description" content="Controle financeiro para motorista de aplicativo" />
+  <meta name="theme-color" content="#F9E6EF" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#2A1F2B" media="(prefers-color-scheme: dark)" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- ===================== INÍCIO ===================== -->
+    <main id="screen-home" class="screen active" aria-label="Início">
+      <header class="top">
+        <div>
+          <p class="hello" id="hello">Olá!</p>
+          <h1 class="title">Seu resumo</h1>
+        </div>
+        <div class="top-actions">
+          <button class="sync" id="sync-btn" type="button" aria-label="Sincronizar">
+            <span class="dot" id="sync-dot"></span><span id="sync-text">Local</span>
+          </button>
+          <button class="icon-btn" type="button" data-go="settings" aria-label="Ajustes">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <div id="setup-banner" class="banner" hidden>
+        <span>🔗</span>
+        <p>Conecte sua planilha do Google para salvar tudo no Drive.</p>
+        <button type="button" class="link" data-go="settings">Conectar</button>
+      </div>
+
+      <!-- Lembrete de reservas: sempre visível -->
+      <section class="reserve" id="reserve" aria-labelledby="reserve-title">
+        <div class="reserve-head">
+          <p class="eyebrow" id="reserve-title">💰 Guarde este mês · <span id="reserve-month"></span></p>
+          <button class="chip-check" id="reserve-done" type="button" aria-pressed="false">Separei</button>
+        </div>
+        <p class="reserve-total" id="reserve-total">R$ 0,00</p>
+        <div class="reserve-rows">
+          <div><span>🚗 Depreciação do carro</span><strong id="reserve-dep">R$ 0,00</strong></div>
+          <div><span>🔧 Reserva de manutenção</span><strong id="reserve-man">R$ 0,00</strong></div>
+        </div>
+        <p class="reserve-hint" id="reserve-hint"></p>
+      </section>
+
+      <div class="segmented" role="tablist" aria-label="Período">
+        <button role="tab" data-period="semana" type="button">Semana</button>
+        <button role="tab" data-period="mes" type="button" class="on" aria-selected="true">Mês</button>
+        <button role="tab" data-period="ano" type="button">Ano</button>
+      </div>
+
+      <div class="period-nav">
+        <button type="button" id="prev" class="icon-btn" aria-label="Período anterior">
+          <svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+        </button>
+        <button type="button" id="period-label" class="period-label">—</button>
+        <button type="button" id="next" class="icon-btn" aria-label="Próximo período">
+          <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+
+      <section class="card profit">
+        <p class="eyebrow">Lucro líquido</p>
+        <p class="big" id="profit">R$ 0,00</p>
+        <div class="tiles">
+          <div class="tile in">
+            <span>Ganhos</span>
+            <strong id="income">R$ 0,00</strong>
+            <small id="income-note"></small>
+          </div>
+          <div class="tile out">
+            <span>Gastos</span>
+            <strong id="expenses">R$ 0,00</strong>
+          </div>
+        </div>
+        <div class="after">
+          <span>Depois de guardar as reservas</span>
+          <strong id="profit-after">R$ 0,00</strong>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>Gastos por tipo</h2>
+        </div>
+        <div id="breakdown" class="breakdown"></div>
+      </section>
+
+      <div class="quick">
+        <button type="button" class="btn soft" data-new="gasto">➕ Registrar gasto</button>
+        <button type="button" class="btn soft lilac" data-new="ganho">💵 Ganho do mês</button>
+      </div>
+    </main>
+
+    <!-- ===================== HISTÓRICO ===================== -->
+    <main id="screen-history" class="screen" aria-label="Histórico">
+      <header class="top">
+        <div>
+          <p class="hello">Tudo o que você lançou</p>
+          <h1 class="title">Histórico</h1>
+        </div>
+      </header>
+      <div class="filters" role="tablist" aria-label="Filtro">
+        <button type="button" data-filter="todos" class="on">Todos</button>
+        <button type="button" data-filter="gastos">Gastos</button>
+        <button type="button" data-filter="ganhos">Ganhos</button>
+      </div>
+      <div id="history-list"></div>
+    </main>
+
+    <!-- ===================== AJUSTES ===================== -->
+    <main id="screen-settings" class="screen" aria-label="Ajustes">
+      <header class="top">
+        <div>
+          <p class="hello">Personalize o app</p>
+          <h1 class="title">Ajustes</h1>
+        </div>
+        <button class="icon-btn" type="button" data-go="home" aria-label="Voltar ao início">
+          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+
+      <form id="form-settings" class="card form" autocomplete="off">
+        <h2>🚗 Seu carro</h2>
+        <label class="field">
+          <span>Seu nome</span>
+          <input id="cfg-nome" type="text" placeholder="Pri" maxlength="30" />
+        </label>
+        <label class="field">
+          <span>Valor atual do carro (tabela FIPE)</span>
+          <input id="cfg-valor" class="money" type="text" inputmode="numeric" placeholder="R$ 0,00" />
+        </label>
+        <label class="field">
+          <span>Depreciação por ano (%)</span>
+          <input id="cfg-dep" type="number" inputmode="decimal" min="0" max="100" step="0.5" />
+          <small>Carros de aplicativo costumam perder de 10% a 15% do valor por ano.</small>
+        </label>
+        <label class="field">
+          <span>Reserva de manutenção (% dos ganhos)</span>
+          <input id="cfg-man" type="number" inputmode="decimal" min="0" max="100" step="0.5" />
+          <small>Guarde essa parte dos ganhos para pneus, revisão, freios e imprevistos.</small>
+        </label>
+        <p class="calc" id="cfg-preview"></p>
+        <button class="btn primary" type="submit">Salvar ajustes</button>
+      </form>
+
+      <form id="form-api" class="card form" autocomplete="off">
+        <h2>📄 Planilha do Google</h2>
+        <p class="muted">Cole aqui o link do Apps Script (termina em <code>/exec</code>) e a senha que você colocou no código. O passo a passo está no README do projeto.</p>
+        <label class="field">
+          <span>Link do Apps Script</span>
+          <input id="api-url" type="url" placeholder="https://script.google.com/macros/s/.../exec" />
+        </label>
+        <label class="field">
+          <span>Senha (token)</span>
+          <input id="api-token" type="password" placeholder="a mesma do Code.gs" />
+        </label>
+        <div class="row">
+          <button class="btn primary" type="submit">Salvar e conectar</button>
+          <button class="btn ghost" type="button" id="api-test">Testar</button>
+        </div>
+        <p class="muted" id="api-status"></p>
+      </form>
+
+      <p class="foot">Os dados ficam também no seu celular e são enviados para a planilha assim que houver internet.</p>
+    </main>
+  </div>
+
+  <!-- ===================== NAVEGAÇÃO ===================== -->
+  <nav class="tabbar" aria-label="Navegação">
+    <button type="button" data-go="home" class="on">
+      <svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg>
+      <span>Início</span>
+    </button>
+    <button type="button" class="fab" data-new="gasto" aria-label="Novo lançamento">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+    <button type="button" data-go="history">
+      <svg viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/></svg>
+      <span>Histórico</span>
+    </button>
+  </nav>
+
+  <!-- ===================== FOLHA DE LANÇAMENTO ===================== -->
+  <div class="sheet-backdrop" id="sheet" hidden>
+    <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      <div class="grab" aria-hidden="true"></div>
+      <header class="sheet-head">
+        <h2 id="sheet-title">Novo lançamento</h2>
+        <button type="button" class="icon-btn" id="sheet-close" aria-label="Fechar">
+          <svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </header>
+
+      <div class="segmented small" id="kind-tabs" role="tablist">
+        <button type="button" data-kind="gasto" class="on">Gasto</button>
+        <button type="button" data-kind="ganho">Ganho do mês</button>
+      </div>
+
+      <!-- Gasto -->
+      <form id="form-gasto" class="form" autocomplete="off">
+        <label class="field money-field">
+          <span>Quanto você gastou?</span>
+          <input id="g-valor" class="money big-input" type="text" inputmode="numeric" placeholder="R$ 0,00" required />
+        </label>
+        <fieldset class="field">
+          <legend>Tipo de gasto</legend>
+          <div class="choices" id="g-tipos"></div>
+        </fieldset>
+        <fieldset class="field">
+          <legend>Data</legend>
+          <div class="date-row">
+            <button type="button" class="pill" data-day="0">Hoje</button>
+            <button type="button" class="pill" data-day="-1">Ontem</button>
+            <input id="g-data" type="date" required />
+          </div>
+        </fieldset>
+        <label class="field">
+          <span>Observação <em>(opcional)</em></span>
+          <input id="g-obs" type="text" maxlength="80" placeholder="Ex.: posto Shell, troca de óleo…" />
+        </label>
+        <div class="sheet-actions">
+          <button type="button" class="btn danger-ghost" id="g-del" hidden>Excluir</button>
+          <button type="submit" class="btn primary" id="g-save">Salvar gasto</button>
+        </div>
+      </form>
+
+      <!-- Ganho -->
+      <form id="form-ganho" class="form" autocomplete="off" hidden>
+        <label class="field money-field">
+          <span>Quanto entrou líquido no mês?</span>
+          <input id="r-valor" class="money big-input" type="text" inputmode="numeric" placeholder="R$ 0,00" required />
+          <small>Valor que o aplicativo pagou, já descontada a taxa dele.</small>
+        </label>
+        <fieldset class="field">
+          <legend>Aplicativo</legend>
+          <div class="choices three" id="r-apps"></div>
+        </fieldset>
+        <label class="field">
+          <span>Mês</span>
+          <input id="r-mes" type="month" required />
+        </label>
+        <p class="warn" id="r-warn" hidden></p>
+        <label class="field">
+          <span>Observação <em>(opcional)</em></span>
+          <input id="r-obs" type="text" maxlength="80" placeholder="Ex.: inclui bônus de metas" />
+        </label>
+        <div class="sheet-actions">
+          <button type="button" class="btn danger-ghost" id="r-del" hidden>Excluir</button>
+          <button type="submit" class="btn primary" id="r-save">Salvar ganho</button>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden>
+    <span id="toast-text"></span>
+    <button type="button" id="toast-action" hidden></button>
+  </div>
+
+  <script src="/app.js" defer></script>
+</body>
+</html>
