@@ -23,7 +23,9 @@ const SHEETS = {
 const TEXT_COLS = { Ganhos: 'A:C', Gastos: 'A:C', Config: 'A:B' };
 
 function setup() {
-  Object.keys(SHEETS).forEach(getSheet_);
+  Object.keys(SHEETS).forEach(function (name) {
+    getSheet_(name).getRange(TEXT_COLS[name]).setNumberFormat('@');
+  });
   const ss = SpreadsheetApp.getActiveSpreadsheet();
   const padrao = ss.getSheetByName('Página1') || ss.getSheetByName('Sheet1');
   if (padrao && padrao.getLastRow() === 0 && ss.getSheets().length > 1) ss.deleteSheet(padrao);
