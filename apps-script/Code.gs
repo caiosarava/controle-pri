@@ -147,7 +147,8 @@ function readSheet_(name) {
         if (v instanceof Date) {
           v = Utilities.formatDate(v, tz, h === 'mes' ? 'yyyy-MM' : 'yyyy-MM-dd');
         }
-        o[h] = h === 'valor' ? Number(v) || 0 : String(v);
+        // Em Ganhos/Gastos "valor" é dinheiro; na aba Config é texto (nome, percentuais…)
+        o[h] = h === 'valor' && name !== 'Config' ? Number(v) || 0 : String(v);
       });
       return o;
     });

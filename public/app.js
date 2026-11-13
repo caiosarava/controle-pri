@@ -58,7 +58,7 @@
   const ui = Object.assign({ period: 'mes', filter: 'todos', lastTipo: 'combustivel', lastApp: 'Uber' }, store.get(K.ui, {}));
   let ref = new Date();
 
-  const cfg = (k) => (db.config[k] !== undefined && db.config[k] !== '' ? db.config[k] : DEFAULTS[k]);
+  const cfg = (k) => (db.config[k] !== undefined && db.config[k] !== '' && !(k === 'nome' && db.config[k] === '0') ? db.config[k] : DEFAULTS[k]);
   const cfgNum = (k) => Number(String(cfg(k)).replace(',', '.')) || 0;
   const saveDb = () => store.set(K.db, db);
   const saveQueue = () => store.set(K.queue, queue);
@@ -112,7 +112,11 @@
         saveQueue();
       }
       const data = await call({ action: 'list' });
-      db = { gastos: data.gastos || [], ganhos: data.ganhos || [], config: data.config || {} };
+      const config = {};
+      Object.entries(data.config || {}).forEach(([k, v]) => { config[k] = String(v); });
+      // Versões antigas do script devolviam textos da Config como 0: mantém o valor do celular
+      if (config.nome === '0' && db.config.nome && db.config.nome !== '0') config.nome = db.config.nome;
+      db = { gastos: data.gastos || [], ganhos: data.ganhos || [], config };
       queue.forEach(applyLocal); // o que foi lançado durante o envio
       saveDb(); render();
       setStatus(queue.length ? 'pending' : 'ok');
