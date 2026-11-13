@@ -52,7 +52,9 @@
   // ---------------- Estado ----------------
   let db = store.get(K.db, { gastos: [], ganhos: [], config: {} });
   let queue = store.get(K.queue, []);
-  let api = store.get(K.api, { url: '', token: '' });
+  // A conexão fixa (config.js) vale sempre que existir; os Ajustes só servem de reserva
+  const FIXED = window.PRI_CONFIG && window.PRI_CONFIG.API_URL ? { url: window.PRI_CONFIG.API_URL, token: window.PRI_CONFIG.TOKEN || '' } : null;
+  let api = FIXED || store.get(K.api, { url: '', token: '' });
   const ui = Object.assign({ period: 'mes', filter: 'todos', lastTipo: 'combustivel', lastApp: 'Uber' }, store.get(K.ui, {}));
   let ref = new Date();
 
@@ -354,6 +356,7 @@
     $('#cfg-man').value = cfg('manutPct');
     $('#api-url').value = api.url;
     $('#api-token').value = api.token;
+    $('#form-api').hidden = !!FIXED;
     previewSettings();
   }
   function previewSettings() {

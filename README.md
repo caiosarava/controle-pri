@@ -30,7 +30,7 @@ Os valores padrão são 10% de depreciação ao ano e 10% dos ganhos para manute
 1. Abra o [Google Sheets](https://sheets.new) e crie uma planilha, por exemplo **Controle da Pri**.
 2. No menu, vá em **Extensões → Apps Script**.
 3. Apague o código que aparece e cole todo o conteúdo de [`apps-script/Code.gs`](apps-script/Code.gs).
-4. Na linha `const TOKEN = 'troque-esta-senha';`, troque o texto por uma senha só sua (ex.: `pri2026rosa`). Salve (💾).
+4. O código já vem com a senha `const TOKEN = '123456';`, a mesma do app. Salve (💾).
 5. Escolha a função **`setup`** no menu de funções e clique em **▶ Executar**. Autorize com sua conta Google. Se aparecer "app não verificado", clique em *Avançado → Acessar (não seguro)*: o código é seu e só acessa esta planilha.
    As abas **Ganhos**, **Gastos** e **Config** vão aparecer na planilha.
 6. Clique em **Implantar → Nova implantação**, escolha a engrenagem e o tipo **App da Web** e configure:
@@ -51,7 +51,18 @@ Os valores padrão são 10% de depreciação ao ano e 10% dos ganhos para manute
 
 1. Abra o endereço do Vercel no **Chrome** do celular.
 2. Toque em **⋮ → Instalar app** (ou "Adicionar à tela inicial").
-3. Abra o app, toque na **engrenagem**, cole a URL do Apps Script e a senha, depois toque em **Salvar e conectar**.
+3. Pronto: o app já vem conectado à planilha pelo arquivo `public/config.js`, sem precisar preencher nada.
+
+### Conexão fixa (`public/config.js`)
+
+```js
+window.PRI_CONFIG = {
+  API_URL: 'https://script.google.com/macros/s/.../exec', // URL da implantação do Apps Script
+  TOKEN: '123456',                                         // igual ao TOKEN do Code.gs
+};
+```
+
+Com `API_URL` preenchido, o app usa essa conexão e esconde o formulário da planilha em Ajustes. Se `API_URL` ficar vazio, o formulário volta a aparecer.
 
 Pronto! O indicador no topo mostra **Salvo** (verde) quando tudo foi enviado para a planilha, **pendente** (laranja) quando falta enviar e **Sem internet** (vermelho) quando você está offline.
 Segure o ícone do app para usar os atalhos **Registrar gasto** e **Ganho do mês**.
@@ -64,6 +75,7 @@ Segure o ícone do app para usar os atalhos **Registrar gasto** e **Ganho do mê
 public/
   index.html             telas do app
   styles.css             visual (tons de rosa e lilás, com modo escuro automático)
+  config.js              link e senha da planilha (conexão fixa)
   app.js                 lógica, cálculos e sincronização
   sw.js                  service worker (funciona offline)
   manifest.webmanifest   dados para instalar o app

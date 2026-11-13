@@ -11,7 +11,7 @@
  * 6. Copie a URL que termina em /exec e cole no app (Ajustes > Planilha).
  */
 
-const TOKEN = 'troque-esta-senha';
+const TOKEN = '123456';
 
 const SHEETS = {
   Ganhos: ['id', 'mes', 'app', 'valor', 'obs', 'criadoEm'],
